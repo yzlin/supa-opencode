@@ -1,11 +1,11 @@
 ---
-description: "Use when auditing Claude skills and commands for quality. Supports Quick Scan (changed skills only) and Full Stocktake modes with sequential subagent batch evaluation."
+description: "Use when auditing Opencode skills and commands for quality. Supports Quick Scan (changed skills only) and Full Stocktake modes with sequential subagent batch evaluation."
 origin: ECC
 ---
 
 # skill-stocktake
 
-Slash command (`/skill-stocktake`) that audits all Claude skills and commands using a quality checklist + AI holistic judgment. Supports two modes: Quick Scan for recently changed skills, and Full Stocktake for a complete review.
+Slash command (`/skill-stocktake`) that audits all Opencode skills and commands using a quality checklist + AI holistic judgment. Supports two modes: Quick Scan for recently changed skills, and Full Stocktake for a complete review.
 
 ## Scope
 
@@ -27,7 +27,7 @@ cd ~/path/to/my-project
 /skill-stocktake
 ```
 
-If the project has no `.claude/skills/` directory, only global skills and commands are evaluated.
+If the project has no `./.config/opencode/skills/` directory, only global skills and commands are evaluated.
 
 ## Modes
 
@@ -107,14 +107,14 @@ Verdict criteria:
 Evaluation is **holistic AI judgment** — not a numeric rubric. Guiding dimensions:
 - **Actionability**: code examples, commands, or steps that let you act immediately
 - **Scope fit**: name, trigger, and content are aligned; not too broad or narrow
-- **Uniqueness**: value not replaceable by MEMORY.md / CLAUDE.md / another skill
+- **Uniqueness**: value not replaceable by MEMORY.md / AGENTS.md / another skill
 - **Currency**: technical references work in the current environment
 
 **Reason quality requirements** — the `reason` field must be self-contained and decision-enabling:
 - Do NOT write "unchanged" alone — always restate the core evidence
 - For **Retire**: state (1) what specific defect was found, (2) what covers the same need instead
   - Bad: `"Superseded"`
-  - Good: `"disable-model-invocation: true already set; superseded by continuous-learning-v2 which covers all the same patterns plus confidence scoring. No unique content remains."`
+  - Good: `"disable-model-invocation: true already set; superseded by continuous-learning which covers all the same patterns plus confidence scoring. No unique content remains."`
 - For **Merge**: name the target and describe what content to integrate
   - Bad: `"Overlaps with X"`
   - Good: `"42-line thin content; Step 4 of chatlog-to-article already covers the same workflow. Integrate the 'article angle' tip as a note in that skill."`

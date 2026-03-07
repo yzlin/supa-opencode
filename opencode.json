@@ -4,76 +4,13 @@
   "small_model": "openai/gpt-5.3-codex-spark",
   "default_agent": "build",
   "instructions": [
-    "./instructions/INSTRUCTIONS.md",
-    "./skills/agent-harness-construction/SKILL.md",
-    "./skills/agentic-engineering/SKILL.md",
-    "./skills/ai-first-engineering/SKILL.md",
-    "./skills/api-design/SKILL.md",
-    "./skills/article-writing/SKILL.md",
-    "./skills/autonomous-loops/SKILL.md",
-    "./skills/backend-patterns/SKILL.md",
-    "./skills/clickhouse-io/SKILL.md",
-    "./skills/coding-standards/SKILL.md",
-    "./skills/configure-ecc/SKILL.md",
-    "./skills/content-engine/SKILL.md",
-    "./skills/content-hash-cache-pattern/SKILL.md",
-    "./skills/continuous-agent-loop/SKILL.md",
-    "./skills/continuous-learning/SKILL.md",
-    "./skills/continuous-learning-v2/SKILL.md",
-    "./skills/cost-aware-llm-pipeline/SKILL.md",
-    "./skills/cpp-coding-standards/SKILL.md",
-    "./skills/cpp-testing/SKILL.md",
-    "./skills/database-migrations/SKILL.md",
-    "./skills/deployment-patterns/SKILL.md",
-    "./skills/django-patterns/SKILL.md",
-    "./skills/django-security/SKILL.md",
-    "./skills/django-tdd/SKILL.md",
-    "./skills/django-verification/SKILL.md",
-    "./skills/docker-patterns/SKILL.md",
-    "./skills/e2e-testing/SKILL.md",
-    "./skills/enterprise-agent-ops/SKILL.md",
-    "./skills/eval-harness/SKILL.md",
-    "./skills/foundation-models-on-device/SKILL.md",
-    "./skills/frontend-patterns/SKILL.md",
-    "./skills/frontend-slides/SKILL.md",
-    "./skills/golang-patterns/SKILL.md",
-    "./skills/golang-testing/SKILL.md",
-    "./skills/investor-materials/SKILL.md",
-    "./skills/investor-outreach/SKILL.md",
-    "./skills/iterative-retrieval/SKILL.md",
-    "./skills/java-coding-standards/SKILL.md",
-    "./skills/jpa-patterns/SKILL.md",
-    "./skills/liquid-glass-design/SKILL.md",
-    "./skills/market-research/SKILL.md",
-    "./skills/nanoclaw-repl/SKILL.md",
-    "./skills/nutrient-document-processing/SKILL.md",
-    "./skills/plankton-code-quality/SKILL.md",
-    "./skills/postgres-patterns/SKILL.md",
-    "./skills/project-guidelines-example/SKILL.md",
-    "./skills/python-patterns/SKILL.md",
-    "./skills/python-testing/SKILL.md",
-    "./skills/ralphinho-rfc-pipeline/SKILL.md",
-    "./skills/regex-vs-llm-structured-text/SKILL.md",
-    "./skills/search-first/SKILL.md",
-    "./skills/security-review/SKILL.md",
-    "./skills/security-scan/SKILL.md",
-    "./skills/skill-stocktake/SKILL.md",
-    "./skills/springboot-patterns/SKILL.md",
-    "./skills/springboot-security/SKILL.md",
-    "./skills/springboot-tdd/SKILL.md",
-    "./skills/springboot-verification/SKILL.md",
-    "./skills/strategic-compact/SKILL.md",
-    "./skills/swift-actor-persistence/SKILL.md",
-    "./skills/swift-concurrency-6-2/SKILL.md",
-    "./skills/swift-protocol-di-testing/SKILL.md",
-    "./skills/swiftui-patterns/SKILL.md",
-    "./skills/tdd-workflow/SKILL.md",
-    "./skills/verification-loop/SKILL.md",
-    "./skills/visa-doc-translate/SKILL.md"
+    "./rules/common/*.md",
+    "./rules/golang/*.md",
+    "./rules/python/*.md",
+    "./rules/swift/*.md",
+    "./rules/typescript/*.md"
   ],
-  "plugin": [
-    "./plugins"
-  ],
+  "plugin": ["./plugins"],
   "agent": {
     "build": {
       "description": "Primary coding agent for development work",
@@ -90,7 +27,7 @@
       "description": "Expert planning specialist for complex features and refactoring. Use for implementation planning, architectural changes, or complex refactoring.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/planner.txt}",
+      "prompt": "{file:./prompts/agents/planner.md}",
       "tools": {
         "read": true,
         "bash": true,
@@ -102,7 +39,7 @@
       "description": "Software architecture specialist for system design, scalability, and technical decision-making.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/architect.txt}",
+      "prompt": "{file:./prompts/agents/architect.md}",
       "tools": {
         "read": true,
         "bash": true,
@@ -114,7 +51,7 @@
       "description": "Expert code review specialist. Reviews code for quality, security, and maintainability. Use immediately after writing or modifying code.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/code-reviewer.txt}",
+      "prompt": "{file:./prompts/agents/code-reviewer.md}",
       "tools": {
         "read": true,
         "bash": true,
@@ -126,7 +63,7 @@
       "description": "Security vulnerability detection and remediation specialist. Use after writing code that handles user input, authentication, API endpoints, or sensitive data.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/security-reviewer.txt}",
+      "prompt": "{file:./prompts/agents/security-reviewer.md}",
       "tools": {
         "read": true,
         "bash": true,
@@ -138,7 +75,7 @@
       "description": "Test-Driven Development specialist enforcing write-tests-first methodology. Use when writing new features, fixing bugs, or refactoring code. Ensures 80%+ test coverage.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/tdd-guide.txt}",
+      "prompt": "{file:./prompts/agents/tdd-guide.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -150,7 +87,7 @@
       "description": "Build and TypeScript error resolution specialist. Use when build fails or type errors occur. Fixes build/type errors only with minimal diffs.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/build-error-resolver.txt}",
+      "prompt": "{file:./prompts/agents/build-error-resolver.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -162,7 +99,7 @@
       "description": "End-to-end testing specialist using Playwright. Generates, maintains, and runs E2E tests for critical user flows.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/e2e-runner.txt}",
+      "prompt": "{file:./prompts/agents/e2e-runner.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -174,7 +111,7 @@
       "description": "Documentation and codemap specialist. Use for updating codemaps and documentation.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/doc-updater.txt}",
+      "prompt": "{file:./prompts/agents/doc-updater.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -186,31 +123,7 @@
       "description": "Dead code cleanup and consolidation specialist. Use for removing unused code, duplicates, and refactoring.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/refactor-cleaner.txt}",
-      "tools": {
-        "read": true,
-        "write": true,
-        "edit": true,
-        "bash": true
-      }
-    },
-    "go-reviewer": {
-      "description": "Expert Go code reviewer specializing in idiomatic Go, concurrency patterns, error handling, and performance.",
-      "mode": "subagent",
-      "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/go-reviewer.txt}",
-      "tools": {
-        "read": true,
-        "bash": true,
-        "write": false,
-        "edit": false
-      }
-    },
-    "go-build-resolver": {
-      "description": "Go build, vet, and compilation error resolution specialist. Fixes Go build errors with minimal changes.",
-      "mode": "subagent",
-      "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/go-build-resolver.txt}",
+      "prompt": "{file:./prompts/agents/refactor-cleaner.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -222,7 +135,7 @@
       "description": "PostgreSQL database specialist for query optimization, schema design, security, and performance. Incorporates Supabase best practices.",
       "mode": "subagent",
       "model": "openai/gpt-5.4",
-      "prompt": "{file:./prompts/agents/database-reviewer.txt}",
+      "prompt": "{file:./prompts/agents/database-reviewer.md}",
       "tools": {
         "read": true,
         "write": true,
@@ -284,18 +197,6 @@
       "description": "Extract patterns and learnings from session",
       "template": "{file:./commands/learn.md}\n\n$ARGUMENTS"
     },
-    "checkpoint": {
-      "description": "Save verification state and progress",
-      "template": "{file:./commands/checkpoint.md}\n\n$ARGUMENTS"
-    },
-    "verify": {
-      "description": "Run verification loop",
-      "template": "{file:./commands/verify.md}\n\n$ARGUMENTS"
-    },
-    "eval": {
-      "description": "Run evaluation against criteria",
-      "template": "{file:./commands/eval.md}\n\n$ARGUMENTS"
-    },
     "update-docs": {
       "description": "Update documentation",
       "template": "{file:./commands/update-docs.md}\n\n$ARGUMENTS",
@@ -312,24 +213,6 @@
       "description": "Analyze test coverage",
       "template": "{file:./commands/test-coverage.md}\n\n$ARGUMENTS",
       "agent": "tdd-guide",
-      "subtask": true
-    },
-    "go-review": {
-      "description": "Go code review",
-      "template": "{file:./commands/go-review.md}\n\n$ARGUMENTS",
-      "agent": "go-reviewer",
-      "subtask": true
-    },
-    "go-test": {
-      "description": "Go TDD workflow",
-      "template": "{file:./commands/go-test.md}\n\n$ARGUMENTS",
-      "agent": "tdd-guide",
-      "subtask": true
-    },
-    "go-build": {
-      "description": "Fix Go build errors",
-      "template": "{file:./commands/go-build.md}\n\n$ARGUMENTS",
-      "agent": "go-build-resolver",
       "subtask": true
     },
     "skill-create": {
@@ -359,26 +242,6 @@
     "projects": {
       "description": "List known projects and instinct stats",
       "template": "{file:./commands/projects.md}\n\n$ARGUMENTS"
-    },
-    "quality-gate": {
-      "description": "Run quality gate checks",
-      "template": "{file:./commands/quality-gate.md}\n\n$ARGUMENTS"
-    },
-    "model-route": {
-      "description": "Route tasks to appropriate model",
-      "template": "{file:./commands/model-route.md}\n\n$ARGUMENTS"
-    },
-    "loop-start": {
-      "description": "Start an autonomous agent loop",
-      "template": "{file:./commands/loop-start.md}\n\n$ARGUMENTS"
-    },
-    "loop-status": {
-      "description": "Check autonomous loop status",
-      "template": "{file:./commands/loop-status.md}\n\n$ARGUMENTS"
-    },
-    "harness-audit": {
-      "description": "Audit agent harness configuration",
-      "template": "{file:./commands/harness-audit.md}\n\n$ARGUMENTS"
     }
   },
   "permission": {

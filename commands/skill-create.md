@@ -12,7 +12,7 @@ Analyze git history to generate Claude Code skills: $ARGUMENTS
 1. **Analyze commits** - Pattern recognition from history
 2. **Extract patterns** - Common practices and conventions
 3. **Generate SKILL.md** - Structured skill documentation
-4. **Create instincts** - For continuous-learning-v2
+4. **Create instincts** - For continuous-learning
 
 ## Analysis Process
 

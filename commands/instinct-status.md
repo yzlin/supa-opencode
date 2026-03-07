@@ -5,20 +5,20 @@ agent: build
 
 # Instinct Status Command
 
-Show instinct status from continuous-learning-v2: $ARGUMENTS
+Show instinct status from continuous-learning: $ARGUMENTS
 
 ## Your Task
 
 Run:
 
 ```bash
-python3 "${OPENCODE_PLUGIN_DIR}/skills/continuous-learning-v2/scripts/instinct-cli.py" status
+python3 "${OPENCODE_PLUGIN_DIR}/skills/continuous-learning/scripts/instinct-cli.py" status
 ```
 
 If `OPENCODE_PLUGIN_DIR` is unavailable (plugin not loaded), find the script:
 
 ```bash
-python3 ~/.config/opencode/node_modules/supa-opencode/skills/continuous-learning-v2/scripts/instinct-cli.py status
+python3 ~/.config/opencode/node_modules/supa-opencode/skills/continuous-learning/scripts/instinct-cli.py status
 ```
 
 ## Behavior Notes

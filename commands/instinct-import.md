@@ -9,7 +9,7 @@ Import instincts from a file or URL: $ARGUMENTS
 
 ## Your Task
 
-Import instincts into the continuous-learning-v2 system.
+Import instincts into the continuous-learning system.
 
 ## Import Sources
 

@@ -9,7 +9,7 @@ Export instincts for sharing with others: $ARGUMENTS
 
 ## Your Task
 
-Export instincts from the continuous-learning-v2 system.
+Export instincts from the continuous-learning system.
 
 ## Export Options
 

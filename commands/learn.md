@@ -44,7 +44,7 @@ If patterns are significant, suggest updates to:
 - `skills/[domain]/SKILL.md`
 - `rules/[category].md`
 
-## Instinct Format (for continuous-learning-v2)
+## Instinct Format (for continuous-learning)
 
 ```json
 {
