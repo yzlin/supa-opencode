@@ -1,33 +1,23 @@
 #!/bin/bash
 # Continuous Learning - Session Evaluator
-# Runs on Stop hook to extract reusable patterns from Claude Code sessions
+# Runs at session end to extract reusable patterns from OpenCode sessions
 #
-# Why Stop hook instead of UserPromptSubmit:
-# - Stop runs once at session end (lightweight)
-# - UserPromptSubmit runs every message (heavy, adds latency)
+# Why session end instead of per-message:
+# - Runs once at session end (lightweight)
+# - Doesn't add latency to every message
 #
-# Hook config (in ~/.claude/settings.json):
-# {
-#   "hooks": {
-#     "Stop": [{
-#       "matcher": "*",
-#       "hooks": [{
-#         "type": "command",
-#         "command": "~/.claude/skills/continuous-learning/evaluate-session.sh"
-#       }]
-#     }]
-#   }
-# }
+# In OpenCode, triggered via session.deleted / session.idle plugin events.
+# Script path (manual install): ~/.config/opencode/skills/continuous-learning/evaluate-session.sh
 #
 # Patterns to detect: error_resolution, debugging_techniques, workarounds, project_specific
 # Patterns to ignore: simple_typos, one_time_fixes, external_api_issues
-# Extracted skills saved to: ~/.claude/skills/learned/
+# Extracted skills saved to: ~/.config/opencode/skills/learned/
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="$SCRIPT_DIR/config.json"
-LEARNED_SKILLS_PATH="${HOME}/.claude/skills/learned"
+LEARNED_SKILLS_PATH="${HOME}/.config/opencode/skills/learned"
 MIN_SESSION_LENGTH=10
 
 # Load config if exists
@@ -36,7 +26,7 @@ if [ -f "$CONFIG_FILE" ]; then
     echo "[ContinuousLearning] jq is required to parse config.json but not installed, using defaults" >&2
   else
     MIN_SESSION_LENGTH=$(jq -r '.min_session_length // 10' "$CONFIG_FILE")
-    LEARNED_SKILLS_PATH=$(jq -r '.learned_skills_path // "~/.claude/skills/learned/"' "$CONFIG_FILE" | sed "s|~|$HOME|")
+    LEARNED_SKILLS_PATH=$(jq -r '.learned_skills_path // "~/.config/opencode/skills/learned/"' "$CONFIG_FILE" | sed "s|~|$HOME|")
   fi
 fi
 

@@ -30,7 +30,7 @@ Strategic compaction at logical boundaries:
 
 ## How It Works
 
-The `suggest-compact.js` script runs on PreToolUse (Edit/Write) and:
+The `suggest-compact.js` script runs on `tool.execute.before` (Edit/Write) and:
 
 1. **Tracks tool calls** — Counts tool invocations in session
 2. **Threshold detection** — Suggests at configurable threshold (default: 50 calls)
@@ -38,24 +38,10 @@ The `suggest-compact.js` script runs on PreToolUse (Edit/Write) and:
 
 ## Hook Setup
 
-Add to your `~/.claude/settings.json`:
+The `suggest-compact.js` script is invoked via the `tool.execute.before` event, which is handled automatically by the bundled `ecc-hooks.ts` plugin. No manual `opencode.json` configuration is needed when using supa-opencode as a plugin.
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit",
-        "hooks": [{ "type": "command", "command": "node ~/.claude/skills/strategic-compact/suggest-compact.js" }]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [{ "type": "command", "command": "node ~/.claude/skills/strategic-compact/suggest-compact.js" }]
-      }
-    ]
-  }
-}
-```
+If installed manually, the script path is:
+`${OPENCODE_PLUGIN_DIR}/skills/strategic-compact/suggest-compact.js`
 
 ## Configuration
 
@@ -81,9 +67,9 @@ Understanding what persists helps you compact with confidence:
 
 | Persists | Lost |
 |----------|------|
-| CLAUDE.md instructions | Intermediate reasoning and analysis |
+| opencode.json instructions | Intermediate reasoning and analysis |
 | TodoWrite task list | File contents you previously read |
-| Memory files (`~/.claude/memory/`) | Multi-step conversation context |
+| Memory files | Multi-step conversation context |
 | Git state (commits, branches) | Tool call history and counts |
 | Files on disk | Nuanced user preferences stated verbally |
 

@@ -2,17 +2,17 @@
 # Continuous Learning v2 - Observation Hook
 #
 # Captures tool use events for pattern analysis.
-# Claude Code passes hook data via stdin as JSON.
+# OpenCode passes hook data via stdin as JSON.
 #
 # v2.1: Project-scoped observations — detects current project context
 #       and writes observations to project-specific directory.
 #
-# Registered via plugin hooks/hooks.json (auto-loaded when plugin is enabled).
-# Can also be registered manually in ~/.claude/settings.json.
+# Registered via the supa-opencode plugin (ecc-hooks.ts) on tool.execute.before
+# and tool.execute.after events. Can also be registered manually in a custom plugin.
 
 set -e
 
-# Hook phase from CLI argument: "pre" (PreToolUse) or "post" (PostToolUse)
+# Hook phase from CLI argument: "pre" (tool.execute.before) or "post" (tool.execute.after)
 HOOK_PHASE="${1:-post}"
 
 # ─────────────────────────────────────────────
@@ -63,7 +63,7 @@ source "${SKILL_ROOT}/scripts/detect-project.sh"
 # Configuration
 # ─────────────────────────────────────────────
 
-CONFIG_DIR="${HOME}/.claude/homunculus"
+CONFIG_DIR="${HOME}/.config/opencode/homunculus"
 OBSERVATIONS_FILE="${PROJECT_DIR}/observations.jsonl"
 MAX_FILE_SIZE_MB=10
 
@@ -83,7 +83,7 @@ try:
     data = json.load(sys.stdin)
 
     # Determine event type from CLI argument passed via env var.
-    # Claude Code does NOT include a "hook_type" field in the stdin JSON,
+    # OpenCode does NOT include a "hook_type" field in the stdin JSON,
     # so we rely on the shell argument ("pre" or "post") instead.
     hook_phase = os.environ.get("HOOK_PHASE", "post")
     event = "tool_start" if hook_phase == "pre" else "tool_complete"

@@ -1,40 +1,35 @@
 ---
 name: configure-ecc
-description: Interactive installer for Everything Claude Code — guides users through selecting and installing skills and rules to user-level or project-level directories, verifies paths, and optionally optimizes installed files.
+description: Interactive installer for supa-opencode — guides users through selecting and installing skills to user-level or project-level directories, verifies paths, and optionally optimizes installed files.
 origin: ECC
 ---
 
-# Configure Everything Claude Code (ECC)
+# Configure supa-opencode
 
-An interactive, step-by-step installation wizard for the Everything Claude Code project. Uses `AskUserQuestion` to guide users through selective installation of skills and rules, then verifies correctness and offers optimization.
+An interactive, step-by-step installation wizard for the supa-opencode plugin. Uses `AskUserQuestion` to guide users through selective installation of skills to user-level or project-level directories, then verifies correctness and offers optimization.
 
 ## When to Activate
 
-- User says "configure ecc", "install ecc", "setup everything claude code", or similar
-- User wants to selectively install skills or rules from this project
-- User wants to verify or fix an existing ECC installation
-- User wants to optimize installed skills or rules for their project
+- User says "configure ecc", "configure supa-opencode", "setup supa-opencode", or similar
+- User wants to selectively install skills from this project
+- User wants to verify or fix an existing supa-opencode installation
+- User wants to optimize installed skills for their project
 
 ## Prerequisites
 
-This skill must be accessible to Claude Code before activation. Two ways to bootstrap:
-1. **Via Plugin**: `/plugin install everything-claude-code` — the plugin loads this skill automatically
-2. **Manual**: Copy only this skill to `~/.claude/skills/configure-ecc/SKILL.md`, then activate by saying "configure ecc"
+This skill must be accessible to OpenCode before activation. Two ways to bootstrap:
+1. **Via Plugin** (recommended): supa-opencode plugin loads this skill automatically. The plugin directory is available as `$OPENCODE_PLUGIN_DIR`.
+2. **Manual**: Copy only this skill to `~/.config/opencode/skills/configure-ecc/SKILL.md`, then activate by saying "configure ecc"
 
 ---
 
-## Step 0: Clone ECC Repository
+## Step 0: Locate Plugin Source
 
-Before any installation, clone the latest ECC source to `/tmp`:
+The supa-opencode plugin directory is available as `$OPENCODE_PLUGIN_DIR` (injected by the plugin's `shell.env` hook).
 
-```bash
-rm -rf /tmp/everything-claude-code
-git clone https://github.com/affaan-m/everything-claude-code.git /tmp/everything-claude-code
-```
+Set `ECC_ROOT=$OPENCODE_PLUGIN_DIR` as the source for all subsequent copy operations.
 
-Set `ECC_ROOT=/tmp/everything-claude-code` as the source for all subsequent copy operations.
-
-If the clone fails (network issues, etc.), use `AskUserQuestion` to ask the user to provide a local path to an existing ECC clone.
+If `$OPENCODE_PLUGIN_DIR` is not set, use `AskUserQuestion` to ask the user to provide the plugin directory path.
 
 ---
 
@@ -43,21 +38,21 @@ If the clone fails (network issues, etc.), use `AskUserQuestion` to ask the user
 Use `AskUserQuestion` to ask the user where to install:
 
 ```
-Question: "Where should ECC components be installed?"
+Question: "Where should supa-opencode components be installed?"
 Options:
-  - "User-level (~/.claude/)" — "Applies to all your Claude Code projects"
-  - "Project-level (.claude/)" — "Applies only to the current project"
+  - "User-level (~/.config/opencode/)" — "Applies to all your OpenCode projects"
+  - "Project-level (.opencode/)" — "Applies only to the current project"
   - "Both" — "Common/shared items user-level, project-specific items project-level"
 ```
 
 Store the choice as `INSTALL_LEVEL`. Set the target directory:
-- User-level: `TARGET=~/.claude`
-- Project-level: `TARGET=.claude` (relative to current project root)
-- Both: `TARGET_USER=~/.claude`, `TARGET_PROJECT=.claude`
+- User-level: `TARGET=~/.config/opencode`
+- Project-level: `TARGET=.opencode` (relative to current project root)
+- Both: `TARGET_USER=~/.config/opencode`, `TARGET_PROJECT=.opencode`
 
 Create the target directories if they don't exist:
 ```bash
-mkdir -p $TARGET/skills $TARGET/rules
+mkdir -p $TARGET/skills
 ```
 
 ---
@@ -167,33 +162,6 @@ Note: `continuous-learning` and `continuous-learning-v2` have extra files (confi
 
 ---
 
-## Step 3: Select & Install Rules
-
-Use `AskUserQuestion` with `multiSelect: true`:
-
-```
-Question: "Which rule sets do you want to install?"
-Options:
-  - "Common rules (Recommended)" — "Language-agnostic principles: coding style, git workflow, testing, security, etc. (8 files)"
-  - "TypeScript/JavaScript" — "TS/JS patterns, hooks, testing with Playwright (5 files)"
-  - "Python" — "Python patterns, pytest, black/ruff formatting (5 files)"
-  - "Go" — "Go patterns, table-driven tests, gofmt/staticcheck (5 files)"
-```
-
-Execute installation:
-```bash
-# Common rules (flat copy into rules/)
-cp -r $ECC_ROOT/rules/common/* $TARGET/rules/
-
-# Language-specific rules (flat copy into rules/)
-cp -r $ECC_ROOT/rules/typescript/* $TARGET/rules/   # if selected
-cp -r $ECC_ROOT/rules/python/* $TARGET/rules/        # if selected
-cp -r $ECC_ROOT/rules/golang/* $TARGET/rules/        # if selected
-```
-
-**Important**: If the user selects any language-specific rules but NOT common rules, warn them:
-> "Language-specific rules extend the common rules. Installing without common rules may result in incomplete coverage. Install common rules too?"
-
 ---
 
 ## Step 4: Post-Installation Verification
@@ -205,21 +173,18 @@ After installation, perform these automated checks:
 List all installed files and confirm they exist at the target location:
 ```bash
 ls -la $TARGET/skills/
-ls -la $TARGET/rules/
 ```
 
 ### 4b: Check Path References
 
 Scan all installed `.md` files for path references:
 ```bash
-grep -rn "~/.claude/" $TARGET/skills/ $TARGET/rules/
-grep -rn "../common/" $TARGET/rules/
+grep -rn "~/.config/opencode/" $TARGET/skills/
 grep -rn "skills/" $TARGET/skills/
 ```
 
-**For project-level installs**, flag any references to `~/.claude/` paths:
-- If a skill references `~/.claude/settings.json` — this is usually fine (settings are always user-level)
-- If a skill references `~/.claude/skills/` or `~/.claude/rules/` — this may be broken if installed only at project level
+**For project-level installs**, flag any references to `~/.config/opencode/` paths:
+- If a skill references `~/.config/opencode/skills/` — this may be broken if installed only at project level
 - If a skill references another skill by name — check that the referenced skill was also installed
 
 ### 4c: Check Cross-References Between Skills
@@ -227,18 +192,16 @@ grep -rn "skills/" $TARGET/skills/
 Some skills reference others. Verify these dependencies:
 - `django-tdd` may reference `django-patterns`
 - `springboot-tdd` may reference `springboot-patterns`
-- `continuous-learning-v2` references `~/.claude/homunculus/` directory
+- `continuous-learning-v2` references `~/.config/opencode/homunculus/` directory
 - `python-testing` may reference `python-patterns`
 - `golang-testing` may reference `golang-patterns`
-- Language-specific rules reference `common/` counterparts
-
 ### 4d: Report Issues
 
 For each issue found, report:
 1. **File**: The file containing the problematic reference
 2. **Line**: The line number
-3. **Issue**: What's wrong (e.g., "references ~/.claude/skills/python-patterns but python-patterns was not installed")
-4. **Suggested fix**: What to do (e.g., "install python-patterns skill" or "update path to .claude/skills/")
+3. **Issue**: What's wrong (e.g., "references ~/.config/opencode/skills/python-patterns but python-patterns was not installed")
+4. **Suggested fix**: What to do (e.g., "install python-patterns skill" or "update path to .opencode/skills/")
 
 ---
 
@@ -250,8 +213,6 @@ Use `AskUserQuestion`:
 Question: "Would you like to optimize the installed files for your project?"
 Options:
   - "Optimize skills" — "Remove irrelevant sections, adjust paths, tailor to your tech stack"
-  - "Optimize rules" — "Adjust coverage targets, add project-specific patterns, customize tool configs"
-  - "Optimize both" — "Full optimization of all installed files"
   - "Skip" — "Keep everything as-is"
 ```
 
@@ -259,34 +220,19 @@ Options:
 1. Read each installed SKILL.md
 2. Ask the user what their project's tech stack is (if not already known)
 3. For each skill, suggest removals of irrelevant sections
-4. Edit the SKILL.md files in-place at the installation target (NOT the source repo)
+4. Edit the SKILL.md files in-place at the installation target (NOT the source plugin directory)
 5. Fix any path issues found in Step 4
 
-### If optimizing rules:
-1. Read each installed rule .md file
-2. Ask the user about their preferences:
-   - Test coverage target (default 80%)
-   - Preferred formatting tools
-   - Git workflow conventions
-   - Security requirements
-3. Edit the rule files in-place at the installation target
-
-**Critical**: Only modify files in the installation target (`$TARGET/`), NEVER modify files in the source ECC repository (`$ECC_ROOT/`).
+**Critical**: Only modify files in the installation target (`$TARGET/`), NEVER modify files in the source plugin directory (`$ECC_ROOT/`).
 
 ---
 
 ## Step 6: Installation Summary
 
-Clean up the cloned repository from `/tmp`:
-
-```bash
-rm -rf /tmp/everything-claude-code
-```
-
-Then print a summary report:
+Print a summary report:
 
 ```
-## ECC Installation Complete
+## supa-opencode Installation Complete
 
 ### Installation Target
 - Level: [user-level / project-level / both]
@@ -294,11 +240,6 @@ Then print a summary report:
 
 ### Skills Installed ([count])
 - skill-1, skill-2, skill-3, ...
-
-### Rules Installed ([count])
-- common (8 files)
-- typescript (5 files)
-- ...
 
 ### Verification Results
 - [count] issues found, [count] fixed
@@ -312,15 +253,11 @@ Then print a summary report:
 
 ## Troubleshooting
 
-### "Skills not being picked up by Claude Code"
+### "Skills not being picked up by OpenCode"
 - Verify the skill directory contains a `SKILL.md` file (not just loose .md files)
-- For user-level: check `~/.claude/skills/<skill-name>/SKILL.md` exists
-- For project-level: check `.claude/skills/<skill-name>/SKILL.md` exists
-
-### "Rules not working"
-- Rules are flat files, not in subdirectories: `$TARGET/rules/coding-style.md` (correct) vs `$TARGET/rules/common/coding-style.md` (incorrect for flat install)
-- Restart Claude Code after installing rules
+- For user-level: check `~/.config/opencode/skills/<skill-name>/SKILL.md` exists
+- For project-level: check `.opencode/skills/<skill-name>/SKILL.md` exists
 
 ### "Path reference errors after project-level install"
-- Some skills assume `~/.claude/` paths. Run Step 4 verification to find and fix these.
-- For `continuous-learning-v2`, the `~/.claude/homunculus/` directory is always user-level — this is expected and not an error.
+- Some skills assume `~/.config/opencode/` paths. Run Step 4 verification to find and fix these.
+- For `continuous-learning-v2`, the `~/.config/opencode/homunculus/` directory is always user-level — this is expected and not an error.

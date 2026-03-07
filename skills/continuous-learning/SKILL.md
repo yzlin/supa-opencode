@@ -1,28 +1,28 @@
 ---
 name: continuous-learning
-description: Automatically extract reusable patterns from Claude Code sessions and save them as learned skills for future use.
+description: Automatically extract reusable patterns from OpenCode sessions and save them as learned skills for future use.
 origin: ECC
 ---
 
 # Continuous Learning Skill
 
-Automatically evaluates Claude Code sessions on end to extract reusable patterns that can be saved as learned skills.
+Automatically evaluates OpenCode sessions on end to extract reusable patterns that can be saved as learned skills.
 
 ## When to Activate
 
-- Setting up automatic pattern extraction from Claude Code sessions
-- Configuring the Stop hook for session evaluation
-- Reviewing or curating learned skills in `~/.claude/skills/learned/`
+- Setting up automatic pattern extraction from OpenCode sessions
+- Configuring session end evaluation
+- Reviewing or curating learned skills in `~/.config/opencode/skills/learned/`
 - Adjusting extraction thresholds or pattern categories
 - Comparing v1 (this) vs v2 (instinct-based) approaches
 
 ## How It Works
 
-This skill runs as a **Stop hook** at the end of each session:
+This skill runs at the end of each session:
 
 1. **Session Evaluation**: Checks if session has enough messages (default: 10+)
 2. **Pattern Detection**: Identifies extractable patterns from the session
-3. **Skill Extraction**: Saves useful patterns to `~/.claude/skills/learned/`
+3. **Skill Extraction**: Saves useful patterns to `~/.config/opencode/skills/learned/`
 
 ## Configuration
 
@@ -33,7 +33,7 @@ Edit `config.json` to customize:
   "min_session_length": 10,
   "extraction_threshold": "medium",
   "auto_approve": false,
-  "learned_skills_path": "~/.claude/skills/learned/",
+  "learned_skills_path": "~/.config/opencode/skills/learned/",
   "patterns_to_detect": [
     "error_resolution",
     "user_corrections",
@@ -61,23 +61,12 @@ Edit `config.json` to customize:
 
 ## Hook Setup
 
-Add to your `~/.claude/settings.json`:
+In OpenCode, session-end evaluation is triggered via the plugin's `session.deleted` or `session.idle` events, which are handled by the bundled `ecc-hooks.ts` plugin. No manual `opencode.json` hook configuration is needed.
 
-```json
-{
-  "hooks": {
-    "Stop": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "~/.claude/skills/continuous-learning/evaluate-session.sh"
-      }]
-    }]
-  }
-}
-```
+If installed manually, the script path is:
+`~/.config/opencode/skills/continuous-learning/evaluate-session.sh`
 
-## Why Stop Hook?
+## Why Session End?
 
 - **Lightweight**: Runs once at session end
 - **Non-blocking**: Doesn't add latency to every message
@@ -98,7 +87,7 @@ Homunculus v2 takes a more sophisticated approach:
 
 | Feature | Our Approach | Homunculus v2 |
 |---------|--------------|---------------|
-| Observation | Stop hook (end of session) | PreToolUse/PostToolUse hooks (100% reliable) |
+| Observation | Session end hook | `tool.execute.before`/`tool.execute.after` hooks (100% reliable) |
 | Analysis | Main context | Background agent (Haiku) |
 | Granularity | Full skills | Atomic "instincts" |
 | Confidence | None | 0.3-0.9 weighted |

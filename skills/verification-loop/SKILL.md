@@ -122,5 +122,5 @@ Run: /verify
 
 ## Integration with Hooks
 
-This skill complements PostToolUse hooks but provides deeper verification.
+This skill complements `tool.execute.after` hooks but provides deeper verification.
 Hooks catch issues immediately; this skill provides comprehensive review.

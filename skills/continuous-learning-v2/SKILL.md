@@ -8,13 +8,13 @@ version: 2.1.0
 # Continuous Learning v2.1 - Instinct
 -Based Architecture
 
-An advanced learning system that turns your Claude Code sessions into reusable knowledge through atomic "instincts" - small learned behaviors with confidence scoring.
+An advanced learning system that turns your OpenCode sessions into reusable knowledge through atomic "instincts" - small learned behaviors with confidence scoring.
 
 **v2.1** adds **project-scoped instincts** — React patterns stay in your React project, Python conventions stay in your Python project, and universal patterns (like "always validate input") are shared globally.
 
 ## When to Activate
 
-- Setting up automatic learning from Claude Code sessions
+- Setting up automatic learning from OpenCode sessions
 - Configuring instinct-based behavior extraction via hooks
 - Tuning confidence thresholds for learned behaviors
 - Reviewing, exporting, or importing instinct libraries
@@ -26,7 +26,7 @@ An advanced learning system that turns your Claude Code sessions into reusable k
 
 | Feature | v2.0 | v2.1 |
 |---------|------|------|
-| Storage | Global (~/.claude/homunculus/) | Project-scoped (projects/<hash>/) |
+| Storage | Global (~/.config/opencode/homunculus/) | Project-scoped (projects/<hash>/) |
 | Scope | All instincts apply everywhere | Project-scoped + global |
 | Detection | None | git remote URL / repo path |
 | Promotion | N/A | Project → global when seen in 2+ projects |
@@ -37,7 +37,7 @@ An advanced learning system that turns your Claude Code sessions into reusable k
 
 | Feature | v1 | v2 |
 |---------|----|----|
-| Observation | Stop hook (session end) | PreToolUse/PostToolUse (100% reliable) |
+| Observation | Session end hook | `tool.execute.before`/`tool.execute.after` (100% reliable) |
 | Analysis | Main context | Background agent (Haiku) |
 | Granularity | Full skills | Atomic "instincts" |
 | Confidence | None | 0.3-0.9 weighted |
@@ -132,58 +132,28 @@ The system automatically detects your current project:
 3. **`git rev-parse --show-toplevel`** -- fallback using repo path (machine-specific)
 4. **Global fallback** -- if no project is detected, instincts go to global scope
 
-Each project gets a 12-character hash ID (e.g., `a1b2c3d4e5f6`). A registry file at `~/.claude/homunculus/projects.json` maps IDs to human-readable names.
+Each project gets a 12-character hash ID (e.g., `a1b2c3d4e5f6`). A registry file at `~/.config/opencode/homunculus/projects.json` maps IDs to human-readable names.
 
 ## Quick Start
 
 ### 1. Enable Observation Hooks
 
-Add to your `~/.claude/settings.json`.
+**If installed as a plugin** (recommended — via supa-opencode):
 
-**If installed as a plugin** (recommended):
+The `tool.execute.before` and `tool.execute.after` hooks are handled automatically by the bundled `ecc-hooks.ts` plugin. No manual configuration is needed.
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh"
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/hooks/observe.sh"
-      }]
-    }]
-  }
-}
-```
+The observe script path is:
+`${OPENCODE_PLUGIN_DIR}/skills/continuous-learning-v2/hooks/observe.sh`
 
-**If installed manually** to `~/.claude/skills`:
+**If installed manually** to `~/.config/opencode/skills`:
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh"
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "~/.claude/skills/continuous-learning-v2/hooks/observe.sh"
-      }]
-    }]
-  }
-}
+Register the observe script in your OpenCode plugin file to fire on `tool.execute.before` and `tool.execute.after` events:
+
+```ts
+// In your opencode plugin hooks:
+// tool.execute.before → observe.sh pre
+// tool.execute.after  → observe.sh post
+// Script: ~/.config/opencode/skills/continuous-learning-v2/hooks/observe.sh
 ```
 
 ### 2. Initialize Directory Structure
@@ -192,7 +162,7 @@ The system creates directories automatically on first use, but you can also crea
 
 ```bash
 # Global directories
-mkdir -p ~/.claude/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands},projects}
+mkdir -p ~/.config/opencode/homunculus/{instincts/{personal,inherited},evolved/{agents,skills,commands},projects}
 
 # Project directories are auto-created when the hook first runs in a git repo
 ```
@@ -245,7 +215,7 @@ Other behavior (observation capture, instinct thresholds, project scoping, promo
 ## File Structure
 
 ```
-~/.claude/homunculus/
+~/.config/opencode/homunculus/
 +-- identity.json           # Your profile, technical level
 +-- projects.json           # Registry: project hash -> name/path/remote
 +-- observations.jsonl      # Global observations (fallback)
@@ -332,7 +302,7 @@ Confidence evolves over time:
 
 > "v1 relied on skills to observe. Skills are probabilistic -- they fire ~50-80% of the time based on Claude's judgment."
 
-Hooks fire **100% of the time**, deterministically. This means:
+Plugin hooks fire **100% of the time**, deterministically. This means:
 - Every tool call is observed
 - No patterns are missed
 - Learning is comprehensive
@@ -340,9 +310,9 @@ Hooks fire **100% of the time**, deterministically. This means:
 ## Backward Compatibility
 
 v2.1 is fully compatible with v2.0 and v1:
-- Existing global instincts in `~/.claude/homunculus/instincts/` still work as global instincts
-- Existing `~/.claude/skills/learned/` skills from v1 still work
-- Stop hook still runs (but now also feeds into v2)
+- Existing global instincts in `~/.config/opencode/homunculus/instincts/` still work as global instincts
+- Existing `~/.config/opencode/skills/learned/` skills from v1 still work
+- Session end hook still runs (but now also feeds into v2)
 - Gradual migration: run both in parallel
 
 ## Privacy

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Strategic Compact Suggester
-# Runs on PreToolUse or periodically to suggest manual compaction at logical intervals
+# Runs on tool.execute.before or periodically to suggest manual compaction at logical intervals
 #
 # Why manual over auto-compact:
 # - Auto-compact happens at arbitrary points, often mid-task
@@ -8,18 +8,10 @@
 # - Compact after exploration, before execution
 # - Compact after completing a milestone, before starting next
 #
-# Hook config (in ~/.claude/settings.json):
-# {
-#   "hooks": {
-#     "PreToolUse": [{
-#       "matcher": "Edit|Write",
-#       "hooks": [{
-#         "type": "command",
-#         "command": "~/.claude/skills/strategic-compact/suggest-compact.sh"
-#       }]
-#     }]
-#   }
-# }
+# Hook registration: Register in your OpenCode plugin file to fire on tool.execute.before
+# for Edit|Write tools. Script path:
+#   ${OPENCODE_PLUGIN_DIR}/skills/strategic-compact/suggest-compact.sh
+# (handled automatically by the bundled ecc-hooks.ts plugin)
 #
 # Criteria for suggesting compact:
 # - Session has been running for extended period

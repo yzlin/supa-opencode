@@ -22,11 +22,11 @@ Patterns for controlling LLM API costs while maintaining quality. Combines model
 Automatically select cheaper models for simple tasks, reserving expensive models for complex ones.
 
 ```python
-MODEL_SONNET = "claude-sonnet-4-6"
-MODEL_HAIKU = "claude-haiku-4-5-20251001"
+MODEL_CODEX = "openai/gpt-5.3-codex"
+MODEL_CODEX_SPARK = "openai/gpt-5.3-codex-spark"
 
-_SONNET_TEXT_THRESHOLD = 10_000  # chars
-_SONNET_ITEM_THRESHOLD = 30     # items
+_CODEX_TEXT_THRESHOLD = 10_000  # chars
+_CODEX_ITEM_THRESHOLD = 30     # items
 
 def select_model(
     text_length: int,
@@ -36,9 +36,9 @@ def select_model(
     """Select model based on task complexity."""
     if force_model is not None:
         return force_model
-    if text_length >= _SONNET_TEXT_THRESHOLD or item_count >= _SONNET_ITEM_THRESHOLD:
-        return MODEL_SONNET  # Complex task
-    return MODEL_HAIKU  # Simple task (3-4x cheaper)
+    if text_length >= _CODEX_TEXT_THRESHOLD or item_count >= _CODEX_ITEM_THRESHOLD:
+        return MODEL_CODEX  # Complex task
+    return MODEL_CODEX_SPARK  # Simple task (3-4x cheaper)
 ```
 
 ### 2. Immutable Cost Tracking

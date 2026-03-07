@@ -6,7 +6,7 @@ origin: community
 
 # Plankton Code Quality Skill
 
-Integration reference for Plankton (credit: @alxfazio), a write-time code quality enforcement system for Claude Code. Plankton runs formatters and linters on every file edit via PostToolUse hooks, then spawns Claude subprocesses to fix violations the agent didn't catch.
+Integration reference for Plankton (credit: @alxfazio), a write-time code quality enforcement system for OpenCode. Plankton runs formatters and linters on every file edit via `tool.execute.after` hooks, then spawns OpenCode subprocesses to fix violations the agent didn't catch.
 
 ## When to Use
 
@@ -19,7 +19,7 @@ Integration reference for Plankton (credit: @alxfazio), a write-time code qualit
 
 ### Three-Phase Architecture
 
-Every time Claude Code edits or writes a file, Plankton's `multi_linter.sh` PostToolUse hook runs:
+Every time OpenCode edits or writes a file, Plankton's `multi_linter.sh` `tool.execute.after` hook runs:
 
 ```
 Phase 1: Auto-Format (Silent)
@@ -33,7 +33,7 @@ Phase 2: Collect Violations (JSON)
 └─ Still no output to main agent
 
 Phase 3: Delegate + Verify
-├─ Spawns claude -p subprocess with violations JSON
+├─ Spawns opencode run subprocess with violations JSON
 ├─ Routes to model tier based on violation complexity:
 │   ├─ Haiku: formatting, imports, style (E/W/F codes) — 120s timeout
 │   ├─ Sonnet: complexity, refactoring (C901, PLR codes) — 300s timeout
@@ -57,13 +57,13 @@ The main agent only sees issues the subprocess couldn't fix. Most quality proble
 
 LLMs will modify `.ruff.toml` or `biome.json` to disable rules rather than fix code. Plankton blocks this with three layers:
 
-1. **PreToolUse hook** — `protect_linter_configs.sh` blocks edits to all linter configs before they happen
-2. **Stop hook** — `stop_config_guardian.sh` detects config changes via `git diff` at session end
+1. **`tool.execute.before` hook** — `protect_linter_configs.sh` blocks edits to all linter configs before they happen
+2. **Session end hook** — `stop_config_guardian.sh` detects config changes via `git diff` at session end
 3. **Protected files list** — `.ruff.toml`, `biome.json`, `.shellcheckrc`, `.yamllint`, `.hadolint.yaml`, and more
 
 ### Package Manager Enforcement
 
-A PreToolUse hook on Bash blocks legacy package managers:
+A `tool.execute.before` hook on Bash blocks legacy package managers:
 - `pip`, `pip3`, `poetry`, `pipenv` → Blocked (use `uv`)
 - `npm`, `yarn`, `pnpm` → Blocked (use `bun`)
 - Allowed exceptions: `npm audit`, `npm view`, `npm publish`
@@ -84,18 +84,18 @@ brew install jaq ruff uv
 # Install Python linters
 uv sync --all-extras
 
-# Start Claude Code — hooks activate automatically
-claude
+# Start OpenCode — hooks activate automatically
+opencode
 ```
 
-No install command, no plugin config. The hooks in `.claude/settings.json` are picked up automatically when you run Claude Code in the Plankton directory.
+No install command, no plugin config. The hooks in the plugin file are picked up automatically when you run OpenCode in the Plankton directory.
 
 ### Per-Project Integration
 
 To use Plankton hooks in your own project:
 
 1. Copy `.claude/hooks/` directory to your project
-2. Copy `.claude/settings.json` hook configuration
+2. Register the hooks in your OpenCode plugin file
 3. Copy linter config files (`.ruff.toml`, `biome.json`, etc.)
 4. Install the linters for your languages
 
@@ -118,16 +118,16 @@ To use Plankton hooks in your own project:
 
 | Concern | ECC | Plankton |
 |---------|-----|----------|
-| Code quality enforcement | PostToolUse hooks (Prettier, tsc) | PostToolUse hooks (20+ linters + subprocess fixes) |
+| Code quality enforcement | `tool.execute.after` hooks (Prettier, tsc) | `tool.execute.after` hooks (20+ linters + subprocess fixes) |
 | Security scanning | AgentShield, security-reviewer agent | Bandit (Python), Semgrep (TypeScript) |
-| Config protection | — | PreToolUse blocks + Stop hook detection |
+| Config protection | — | `tool.execute.before` blocks + session end detection |
 | Package manager | Detection + setup | Enforcement (blocks legacy PMs) |
 | CI integration | — | Pre-commit hooks for git |
 | Model routing | Manual (`/model opus`) | Automatic (violation complexity → tier) |
 
 ### Recommended Combination
 
-1. Install ECC as your plugin (agents, skills, commands, rules)
+1. Install supa-opencode as your plugin (agents, skills, commands)
 2. Add Plankton hooks for write-time quality enforcement
 3. Use AgentShield for security audits
 4. Use ECC's verification-loop as a final gate before PRs
@@ -135,8 +135,8 @@ To use Plankton hooks in your own project:
 ### Avoiding Hook Conflicts
 
 If running both ECC and Plankton hooks:
-- ECC's Prettier hook and Plankton's biome formatter may conflict on JS/TS files
-- Resolution: disable ECC's Prettier PostToolUse hook when using Plankton (Plankton's biome is more comprehensive)
+- supa-opencode's Prettier hook and Plankton's biome formatter may conflict on JS/TS files
+- Resolution: disable supa-opencode's Prettier `tool.execute.after` hook when using Plankton (Plankton's biome is more comprehensive)
 - Both can coexist on different file types (ECC handles what Plankton doesn't cover)
 
 ## Configuration Reference

@@ -20,31 +20,4 @@
  * @packageDocumentation
  */
 
-export { ECCHooksPlugin, default } from "./plugins/index.js"
-export * from "./plugins/index.js"
-
-export const VERSION = "0.1.0"
-
-export const metadata = {
-  name: "supa-opencode",
-  version: VERSION,
-  description: "Everything Claude Code plugin for OpenCode",
-  features: {
-    agents: 13,
-    commands: 31,
-    skills: 65,
-    hookEvents: [
-      "file.edited",
-      "tool.execute.before",
-      "tool.execute.after",
-      "session.created",
-      "session.idle",
-      "session.deleted",
-      "file.watcher.updated",
-      "permission.ask",
-      "todo.updated",
-      "shell.env",
-      "experimental.session.compacting",
-    ],
-  },
-}
+export { default } from "./plugins/index.js"
