@@ -15,11 +15,15 @@
       "import": "./dist/plugins/index.js"
     }
   },
+  "bin": {
+    "supa-opencode": "./bin/install.sh"
+  },
   "files": [
+    "bin",
     "dist",
     "commands",
     "prompts",
-    "instructions",
+    "rules",
     "skills",
     "opencode.json",
     "README.md"
