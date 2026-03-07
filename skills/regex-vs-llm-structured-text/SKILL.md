@@ -198,7 +198,7 @@ From a production quiz parsing pipeline (410 items):
 
 - **Start with regex** — even imperfect regex gives you a baseline to improve
 - **Use confidence scoring** to programmatically identify what needs LLM help
-- **Use the cheapest LLM** for validation (Haiku-class models are sufficient)
+- **Use the cheapest LLM** for validation (fast/low-cost models like gpt-5.3-codex-spark are sufficient)
 - **Never mutate** parsed items — return new instances from cleaning/validation steps
 - **TDD works well** for parsers — write tests for known patterns first, then edge cases
 - **Log metrics** (regex success rate, LLM call count) to track pipeline health

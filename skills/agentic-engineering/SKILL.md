@@ -31,9 +31,9 @@ Apply the 15-minute unit rule:
 
 ## Model Routing
 
-- Haiku: classification, boilerplate transforms, narrow edits
-- Sonnet: implementation and refactors
-- Opus: architecture, root-cause analysis, multi-file invariants
+- gpt-5.3-codex-spark: classification, boilerplate transforms, narrow edits
+- gpt-5.4 (medium): implementation and refactors
+- gpt-5.4 (xhigh): architecture, root-cause analysis, multi-file invariants
 
 ## Session Strategy
 

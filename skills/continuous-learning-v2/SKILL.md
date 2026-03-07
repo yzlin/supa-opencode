@@ -38,7 +38,7 @@ An advanced learning system that turns your OpenCode sessions into reusable know
 | Feature | v1 | v2 |
 |---------|----|----|
 | Observation | Session end hook | `tool.execute.before`/`tool.execute.after` (100% reliable) |
-| Analysis | Main context | Background agent (Haiku) |
+| Analysis | Main context | Background agent (gpt-5.3-codex-spark) |
 | Granularity | Full skills | Atomic "instincts" |
 | Confidence | None | 0.3-0.9 weighted |
 | Evolution | Direct to skill | Instincts -> cluster -> skill/command/agent |
@@ -90,7 +90,7 @@ Session Activity (in a git repo)
 |   (prompts, tool calls, outcomes, project)   |
 +---------------------------------------------+
       |
-      | Observer agent reads (background, Haiku)
+      | Observer agent reads (background, gpt-5.3-codex-spark)
       v
 +---------------------------------------------+
 |          PATTERN DETECTION                   |

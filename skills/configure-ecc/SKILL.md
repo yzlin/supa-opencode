@@ -61,13 +61,13 @@ mkdir -p $TARGET/skills
 
 ### 2a: Choose Scope (Core vs Niche)
 
-Default to **Core (recommended for new users)** — copy `.agents/skills/*` plus `skills/search-first/` for research-first workflows. This bundle covers engineering, evals, verification, security, strategic compaction, frontend design, and Anthropic cross-functional skills (article-writing, content-engine, market-research, frontend-slides).
+Default to **Core (recommended for new users)** — copy `.agents/skills/*` plus `skills/search-first/` for research-first workflows. This bundle covers engineering, evals, verification, security, strategic compaction, frontend design, and cross-functional skills (article-writing, content-engine, market-research, frontend-slides).
 
 Use `AskUserQuestion` (single select):
 ```
 Question: "Install core skills only, or include niche/framework packs?"
 Options:
-  - "Core only (recommended)" — "tdd, e2e, evals, verification, research-first, security, frontend patterns, compacting, cross-functional Anthropic skills"
+  - "Core only (recommended)" — "tdd, e2e, evals, verification, research-first, security, frontend patterns, compacting, cross-functional skills"
   - "Core + selected niche" — "Add framework/domain-specific skills after core"
   - "Niche only" — "Skip core, install specific framework/domain skills"
 Default: Core only

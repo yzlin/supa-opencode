@@ -221,17 +221,17 @@ No user prompt needed:
 
 ### Model Selection Strategy
 
-**Haiku** (90% of Sonnet capability, 3x cost savings):
+**gpt-5.3-codex-spark** (fast, cost-effective — ~3x cheaper):
 - Lightweight agents with frequent invocation
 - Pair programming and code generation
 - Worker agents in multi-agent systems
 
-**Sonnet** (Best coding model):
+**gpt-5.4 (medium)** (best coding model):
 - Main development work
 - Orchestrating multi-agent workflows
 - Complex coding tasks
 
-**Opus** (Deepest reasoning):
+**gpt-5.4 (xhigh)** (deepest reasoning):
 - Complex architectural decisions
 - Maximum reasoning requirements
 - Research and analysis tasks

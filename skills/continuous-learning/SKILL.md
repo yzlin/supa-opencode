@@ -88,7 +88,7 @@ Homunculus v2 takes a more sophisticated approach:
 | Feature | Our Approach | Homunculus v2 |
 |---------|--------------|---------------|
 | Observation | Session end hook | `tool.execute.before`/`tool.execute.after` hooks (100% reliable) |
-| Analysis | Main context | Background agent (Haiku) |
+| Analysis | Main context | Background agent (gpt-5.3-codex-spark) |
 | Granularity | Full skills | Atomic "instincts" |
 | Confidence | None | 0.3-0.9 weighted |
 | Evolution | Direct to skill | Instincts → cluster → skill/command/agent |
@@ -100,7 +100,7 @@ Homunculus v2 takes a more sophisticated approach:
 ### Potential v2 Enhancements
 
 1. **Instinct-based learning** - Smaller, atomic behaviors with confidence scoring
-2. **Background observer** - Haiku agent analyzing in parallel
+2. **Background observer** - gpt-5.3-codex-spark agent analyzing in parallel
 3. **Confidence decay** - Instincts lose confidence if contradicted
 4. **Domain tagging** - code-style, testing, git, debugging, etc.
 5. **Evolution path** - Cluster related instincts into skills/commands

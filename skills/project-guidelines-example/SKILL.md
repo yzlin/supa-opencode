@@ -148,10 +148,10 @@ async function fetchApi<T>(
 }
 ```
 
-### Claude AI Integration (Structured Output)
+### OpenAI API Integration (Structured Output)
 
 ```python
-from anthropic import Anthropic
+from openai import OpenAI
 from pydantic import BaseModel
 
 class AnalysisResult(BaseModel):
@@ -159,28 +159,16 @@ class AnalysisResult(BaseModel):
     key_points: list[str]
     confidence: float
 
-async def analyze_with_claude(content: str) -> AnalysisResult:
-    client = Anthropic()
+async def analyze_with_openai(content: str) -> AnalysisResult:
+    client = OpenAI()
 
-    response = client.messages.create(
-        model="openai/gpt-4o",
-        max_tokens=1024,
+    response = client.beta.chat.completions.parse(
+        model="openai/gpt-5.4",
         messages=[{"role": "user", "content": content}],
-        tools=[{
-            "name": "provide_analysis",
-            "description": "Provide structured analysis",
-            "input_schema": AnalysisResult.model_json_schema()
-        }],
-        tool_choice={"type": "tool", "name": "provide_analysis"}
+        response_format=AnalysisResult,
     )
 
-    # Extract tool use result
-    tool_use = next(
-        block for block in response.content
-        if block.type == "tool_use"
-    )
-
-    return AnalysisResult(**tool_use.input)
+    return response.choices[0].message.parsed
 ```
 
 ### Custom Hooks (React)
@@ -321,7 +309,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
 
 # Backend (.env)
 DATABASE_URL=postgresql://...
-ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_KEY=eyJ...
 ```

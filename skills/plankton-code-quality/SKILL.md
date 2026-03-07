@@ -1,6 +1,6 @@
 ---
 name: plankton-code-quality
-description: "Write-time code quality enforcement using Plankton — auto-formatting, linting, and Claude-powered fixes on every file edit via hooks."
+description: "Write-time code quality enforcement using Plankton — auto-formatting, linting, and AI-powered fixes on every file edit via hooks."
 origin: community
 ---
 
@@ -12,7 +12,7 @@ Integration reference for Plankton (credit: @alxfazio), a write-time code qualit
 
 - You want automatic formatting and linting on every file edit (not just at commit time)
 - You need defense against agents modifying linter configs to pass instead of fixing code
-- You want tiered model routing for fixes (Haiku for simple style, Sonnet for logic, Opus for types)
+- You want tiered model routing for fixes (gpt-5.3-codex-spark for simple style, gpt-5.4 medium for logic, gpt-5.4 xhigh for types)
 - You work with multiple languages (Python, TypeScript, Shell, YAML, JSON, TOML, Markdown, Dockerfile)
 
 ## How It Works
@@ -35,9 +35,9 @@ Phase 2: Collect Violations (JSON)
 Phase 3: Delegate + Verify
 ├─ Spawns opencode run subprocess with violations JSON
 ├─ Routes to model tier based on violation complexity:
-│   ├─ Haiku: formatting, imports, style (E/W/F codes) — 120s timeout
-│   ├─ Sonnet: complexity, refactoring (C901, PLR codes) — 300s timeout
-│   └─ Opus: type system, deep reasoning (unresolved-attribute) — 600s timeout
+│   ├─ gpt-5.3-codex-spark: formatting, imports, style (E/W/F codes) — 120s timeout
+│   ├─ gpt-5.4 (medium): complexity, refactoring (C901, PLR codes) — 300s timeout
+│   └─ gpt-5.4 (xhigh): type system, deep reasoning (unresolved-attribute) — 600s timeout
 ├─ Re-runs Phase 1+2 to verify fixes
 └─ Exit 0 if clean, Exit 2 if violations remain (reported to main agent)
 ```
@@ -123,7 +123,7 @@ To use Plankton hooks in your own project:
 | Config protection | — | `tool.execute.before` blocks + session end detection |
 | Package manager | Detection + setup | Enforcement (blocks legacy PMs) |
 | CI integration | — | Pre-commit hooks for git |
-| Model routing | Manual (`/model opus`) | Automatic (violation complexity → tier) |
+| Model routing | Manual (`/model gpt-5.4 --variant xhigh`) | Automatic (violation complexity → tier) |
 
 ### Recommended Combination
 
@@ -166,9 +166,9 @@ Plankton's `.claude/hooks/config.json` controls all behavior:
   },
   "subprocess": {
     "tiers": {
-      "haiku":  { "timeout": 120, "max_turns": 10 },
-      "sonnet": { "timeout": 300, "max_turns": 10 },
-      "opus":   { "timeout": 600, "max_turns": 15 }
+      "codex-spark": { "timeout": 120, "max_turns": 10 },
+      "medium":      { "timeout": 300, "max_turns": 10 },
+      "xhigh":       { "timeout": 600, "max_turns": 15 }
     },
     "volume_threshold": 5
   }

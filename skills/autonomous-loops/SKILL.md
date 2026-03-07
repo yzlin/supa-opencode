@@ -77,13 +77,13 @@ opencode run "Create a conventional commit for all staged changes. Use 'feat: ad
 
 **With model routing:**
 ```bash
-# Research with Opus (deep reasoning)
+# Research with gpt-5.4 xhigh (deep reasoning)
 opencode run --model openai/gpt-5.4 "Analyze the codebase architecture and write a plan for adding caching..."
 
-# Implement with Sonnet (fast, capable)
+# Implement with gpt-5.4 medium (fast, capable)
 opencode run "Implement the caching layer according to the plan in docs/caching-plan.md..."
 
-# Review with Opus (thorough)
+# Review with gpt-5.4 xhigh (thorough)
 opencode run --model openai/gpt-5.4 "Review all changes for security issues, race conditions, and edge cases..."
 ```
 
@@ -452,14 +452,14 @@ Each stage runs in its own agent process with its own context window:
 
 | Stage | Model | Purpose |
 |-------|-------|---------|
-| Research | Sonnet | Read codebase + RFC, produce context doc |
-| Plan | Opus | Design implementation steps |
-| Implement | Codex | Write code following the plan |
-| Test | Sonnet | Run build + test suite |
-| PRD Review | Sonnet | Spec compliance check |
-| Code Review | Opus | Quality + security check |
-| Review Fix | Codex | Address review issues |
-| Final Review | Opus | Quality gate (large tier only) |
+| Research | gpt-5.4 (medium) | Read codebase + RFC, produce context doc |
+| Plan | gpt-5.4 (xhigh) | Design implementation steps |
+| Implement | gpt-5.3-codex-spark | Write code following the plan |
+| Test | gpt-5.4 (medium) | Run build + test suite |
+| PRD Review | gpt-5.4 (medium) | Spec compliance check |
+| Code Review | gpt-5.4 (xhigh) | Quality + security check |
+| Review Fix | gpt-5.3-codex-spark | Address review issues |
+| Final Review | gpt-5.4 (xhigh) | Quality gate (large tier only) |
 
 **Critical design:** The reviewer never wrote the code it reviews. This eliminates author bias — the most common source of missed issues in self-review.
 
@@ -565,7 +565,7 @@ These patterns compose well:
 
 3. **Any loop + Verification** — Use the `/verify` command or `verification-loop` skill as a gate before commits.
 
-4. **Ralphinho's tiered approach in simpler loops** — Even in a sequential pipeline, you can route simple tasks to Haiku and complex tasks to Opus:
+4. **Ralphinho's tiered approach in simpler loops** — Even in a sequential pipeline, you can route simple tasks to gpt-5.3-codex-spark and complex tasks to gpt-5.4 xhigh:
    ```bash
    # Simple formatting fix
    opencode run --model openai/gpt-5.3-codex-spark "Fix the import ordering in src/utils.ts"

@@ -1,7 +1,7 @@
 ---
 name: observer
-description: Background agent that analyzes session observations to detect patterns and create instincts. Uses Haiku for cost-efficiency. v2.1 adds project-scoped instincts.
-model: haiku
+description: Background agent that analyzes session observations to detect patterns and create instincts. Uses gpt-5.3-codex-spark for cost-efficiency. v2.1 adds project-scoped instincts.
+model: openai/gpt-5.3-codex-spark
 ---
 
 # Observer Agent

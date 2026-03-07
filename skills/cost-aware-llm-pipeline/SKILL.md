@@ -81,11 +81,7 @@ class CostTracker:
 Retry only on transient errors. Fail fast on authentication or bad request errors.
 
 ```python
-from anthropic import (
-    APIConnectionError,
-    InternalServerError,
-    RateLimitError,
-)
+from openai import APIConnectionError, InternalServerError, RateLimitError
 
 _RETRYABLE_ERRORS = (APIConnectionError, RateLimitError, InternalServerError)
 _MAX_RETRIES = 3
@@ -155,9 +151,9 @@ def process(text: str, config: Config, tracker: CostTracker) -> tuple[Result, Co
 
 | Model | Input ($/1M tokens) | Output ($/1M tokens) | Relative Cost |
 |-------|---------------------|----------------------|---------------|
-| Haiku 4.5 | $0.80 | $4.00 | 1x |
-| Sonnet 4.6 | $3.00 | $15.00 | ~4x |
-| Opus 4.5 | $15.00 | $75.00 | ~19x |
+| gpt-5.3-codex-spark | $0.60 | $2.40 | 1x |
+| gpt-5.4 (medium)    | $3.00 | $12.00 | ~5x |
+| gpt-5.4 (xhigh)     | $15.00 | $60.00 | ~25x |
 
 ## Best Practices
 
