@@ -315,6 +315,11 @@ v2.1 is fully compatible with v2.0 and v1:
 - Session end hook still runs (but now also feeds into v2)
 - Gradual migration: run both in parallel
 
+**Migrating from ECC (Claude Code)**: If you have data in `~/.claude/homunculus/`, copy it to the new path:
+```bash
+cp -rn ~/.claude/homunculus/. ~/.config/opencode/homunculus/
+```
+
 ## Privacy
 
 - Observations stay **local** on your machine

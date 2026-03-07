@@ -15,10 +15,10 @@ Run:
 python3 "${OPENCODE_PLUGIN_DIR}/skills/continuous-learning-v2/scripts/instinct-cli.py" status
 ```
 
-If `OPENCODE_PLUGIN_DIR` is unavailable, use:
+If `OPENCODE_PLUGIN_DIR` is unavailable (plugin not loaded), find the script:
 
 ```bash
-python3 ~/.config/opencode/skills/continuous-learning-v2/scripts/instinct-cli.py status
+python3 ~/.config/opencode/node_modules/supa-opencode/skills/continuous-learning-v2/scripts/instinct-cli.py status
 ```
 
 ## Behavior Notes
