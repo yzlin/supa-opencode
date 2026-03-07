@@ -45,7 +45,7 @@ Re-evaluate only skills that have changed since the last run (5–10 min).
 1. Read `~/.config/opencode/skills/skill-stocktake/results.json`
 2. Run: `bash ~/.config/opencode/skills/skill-stocktake/scripts/quick-diff.sh \
          ~/.config/opencode/skills/skill-stocktake/results.json`
-   (Project dir is auto-detected from `$PWD/.claude/skills`; pass it explicitly only if needed)
+   (Project dir is auto-detected from `$PWD/.opencode/skills`; pass it explicitly only if needed)
 3. If output is `[]`: report "No changes since last run." and stop
 4. Re-evaluate only those changed files using the same Phase 2 criteria
 5. Carry forward unchanged skills from previous results
@@ -60,7 +60,7 @@ Re-evaluate only skills that have changed since the last run (5–10 min).
 Run: `bash ~/.config/opencode/skills/skill-stocktake/scripts/scan.sh`
 
 The script enumerates skill files, extracts frontmatter, and collects UTC mtimes.
-Project dir is auto-detected from `$PWD/.claude/skills`; pass it explicitly only if needed.
+Project dir is auto-detected from `$PWD/.opencode/skills`; pass it explicitly only if needed.
 Present the scan summary and inventory table from the script output:
 
 ```

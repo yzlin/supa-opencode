@@ -9,7 +9,7 @@ paths:
 
 ## PostToolUse Hooks
 
-Configure in `~/.claude/settings.json`:
+Configure in `~/.config/opencode/opencode.json`:
 
 - **black/ruff**: Auto-format `.py` files after edit
 - **mypy/pyright**: Run type checking after editing `.py` files

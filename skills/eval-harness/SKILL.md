@@ -168,7 +168,7 @@ Status: READY FOR REVIEW
 ```
 /eval define feature-name
 ```
-Creates eval definition file at `.claude/evals/feature-name.md`
+Creates eval definition file at `.opencode/evals/feature-name.md`
 
 ### During Implementation
 ```
@@ -186,7 +186,7 @@ Generates full eval report
 
 Store evals in project:
 ```
-.claude/
+.opencode/
   evals/
     feature-xyz.md      # Eval definition
     feature-xyz.log     # Eval run history
@@ -265,6 +265,6 @@ Recommended thresholds:
 
 ### Minimal Eval Artifact Layout
 
-- `.claude/evals/<feature>.md` definition
-- `.claude/evals/<feature>.log` run history
+- `.opencode/evals/<feature>.md` definition
+- `.opencode/evals/<feature>.log` run history
 - `docs/releases/<version>/eval-summary.md` release snapshot

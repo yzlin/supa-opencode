@@ -33,7 +33,7 @@ source "${SKILL_ROOT}/scripts/detect-project.sh"
 # Configuration
 # ─────────────────────────────────────────────
 
-CONFIG_DIR="${HOME}/.claude/homunculus"
+CONFIG_DIR="${HOME}/.config/opencode/homunculus"
 CONFIG_FILE="${SKILL_ROOT}/config.json"
 # PID file is project-scoped so each project can have its own observer
 PID_FILE="${PROJECT_DIR}/.observer.pid"

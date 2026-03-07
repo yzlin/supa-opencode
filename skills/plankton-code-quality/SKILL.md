@@ -94,7 +94,7 @@ No install command, no plugin config. The hooks in the plugin file are picked up
 
 To use Plankton hooks in your own project:
 
-1. Copy `.claude/hooks/` directory to your project
+1. Copy `.opencode/hooks/` directory to your project
 2. Register the hooks in your OpenCode plugin file
 3. Copy linter config files (`.ruff.toml`, `biome.json`, etc.)
 4. Install the linters for your languages
@@ -141,7 +141,7 @@ If running both ECC and Plankton hooks:
 
 ## Configuration Reference
 
-Plankton's `.claude/hooks/config.json` controls all behavior:
+Plankton's `.opencode/hooks/config.json` controls all behavior:
 
 ```json
 {
