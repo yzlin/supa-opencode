@@ -17,6 +17,7 @@ import type { Hooks, PluginInput } from "@opencode-ai/plugin";
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { spawn } from "child_process";
 
 // Resolve plugin root directory (one level up from dist/)
 const PLUGIN_DIR = join(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -81,6 +82,26 @@ const ECCHooksPlugin = async ({
 		);
 	};
 
+	const OBSERVE_SCRIPT = join(
+		PLUGIN_DIR,
+		"skills/continuous-learning/hooks/observe.sh",
+	);
+
+	const spawnObserver = (phase: "pre" | "post", payload: object): void => {
+		if (!hookEnabled("continuous-learning:observe", "minimal")) return;
+		try {
+			const proc = spawn("bash", [OBSERVE_SCRIPT, phase], {
+				stdio: ["pipe", "ignore", "ignore"],
+				detached: false,
+			});
+			proc.stdin.write(JSON.stringify(payload));
+			proc.stdin.end();
+			proc.unref(); // fire-and-forget, don't block
+		} catch {
+			// never block tool execution
+		}
+	};
+
 	return {
 		/**
 		 * TypeScript Check Hook
@@ -143,6 +164,16 @@ const ECCHooksPlugin = async ({
 					log("info", "[ECC] PR created - check GitHub Actions status");
 				}
 			}
+
+		// Continuous learning observation (fire-and-forget)
+		spawnObserver("post", {
+			tool_name: input.tool,
+			tool_output:
+				typeof _output === "string" ? _output : JSON.stringify(_output ?? ""),
+			session_id: input.sessionID,
+			tool_use_id: input.callID,
+			cwd: worktree || directory,
+		});
 		},
 
 		/**
@@ -193,6 +224,15 @@ const ECCHooksPlugin = async ({
 					);
 				}
 			}
+
+		// Continuous learning observation (fire-and-forget)
+		spawnObserver("pre", {
+			tool_name: input.tool,
+			tool_input: output.args ?? {},
+			session_id: input.sessionID,
+			tool_use_id: input.callID,
+			cwd: worktree || directory,
+		});
 		},
 
 		/**
