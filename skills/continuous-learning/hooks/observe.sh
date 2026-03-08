@@ -45,7 +45,7 @@ except(KeyError, TypeError, ValueError):
 
 # If cwd was provided in stdin, use it for project detection
 if [ -n "$STDIN_CWD" ] && [ -d "$STDIN_CWD" ]; then
-  export CLAUDE_PROJECT_DIR="$STDIN_CWD"
+  export OPENCODE_PROJECT_DIR="$STDIN_CWD"
 fi
 
 # ─────────────────────────────────────────────

@@ -342,6 +342,7 @@ def test_validate_relative_path(tmp_path, monkeypatch):
 
 def test_detect_project_global_fallback(patch_globals, monkeypatch):
     """When no git and no env var, should return global project."""
+    monkeypatch.delenv("OPENCODE_PROJECT_DIR", raising=False)
     monkeypatch.delenv("CLAUDE_PROJECT_DIR", raising=False)
 
     # Mock subprocess.run to simulate git not available
@@ -356,10 +357,10 @@ def test_detect_project_global_fallback(patch_globals, monkeypatch):
 
 
 def test_detect_project_from_env(patch_globals, monkeypatch, tmp_path):
-    """CLAUDE_PROJECT_DIR env var should be used as project root."""
+    """OPENCODE_PROJECT_DIR env var should be used as project root."""
     fake_repo = tmp_path / "my-repo"
     fake_repo.mkdir()
-    monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(fake_repo))
+    monkeypatch.setenv("OPENCODE_PROJECT_DIR", str(fake_repo))
 
     # Mock git remote to return a URL
     def mock_run(cmd, **kwargs):
@@ -382,6 +383,7 @@ def test_detect_project_from_env(patch_globals, monkeypatch, tmp_path):
 
 def test_detect_project_git_timeout(patch_globals, monkeypatch):
     """Git timeout should fall through to global."""
+    monkeypatch.delenv("OPENCODE_PROJECT_DIR", raising=False)
     monkeypatch.delenv("CLAUDE_PROJECT_DIR", raising=False)
     import subprocess as sp
 
@@ -398,7 +400,7 @@ def test_detect_project_creates_directories(patch_globals, monkeypatch, tmp_path
     """detect_project should create the project dir structure."""
     fake_repo = tmp_path / "structured-repo"
     fake_repo.mkdir()
-    monkeypatch.setenv("CLAUDE_PROJECT_DIR", str(fake_repo))
+    monkeypatch.setenv("OPENCODE_PROJECT_DIR", str(fake_repo))
 
     def mock_run(cmd, **kwargs):
         if "rev-parse" in cmd:

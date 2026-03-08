@@ -13,6 +13,7 @@
 #   1. Copies rules/common/ and rules/<language>/ to ~/.config/opencode/rules/
 #   2. Patches ~/.config/opencode/opencode.json to add the rule file globs
 #      to the `instructions` array (preserving all existing entries).
+#   3. Symlinks skills/ to ~/.config/opencode/skills/ (preserving existing custom skills).
 #
 # Requirements:
 #   - jq (https://jqlang.github.io/jq/) must be installed for JSON patching.
@@ -28,9 +29,11 @@ while [ -L "$SCRIPT_PATH" ]; do
 done
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 RULES_DIR="$SCRIPT_DIR/../rules"
+SKILLS_DIR="$SCRIPT_DIR/../skills"
 OPENCODE_CONFIG_DIR="${HOME}/.config/opencode"
 OPENCODE_CONFIG="${OPENCODE_CONFIG_DIR}/opencode.json"
 DEST_RULES_DIR="${OPENCODE_CONFIG_DIR}/rules"
+DEST_SKILLS_DIR="${OPENCODE_CONFIG_DIR}/skills"
 
 # --- Strip optional "install" subcommand ---
 if [[ "${1:-}" == "install" ]]; then
@@ -64,6 +67,32 @@ if ! command -v jq &>/dev/null; then
     done
     exit 1
 fi
+
+# --- Helper: symlink a skill directory ---
+link_skill() {
+    local source="$1"
+    local name
+    name="$(basename "$source")"
+    local target="${DEST_SKILLS_DIR}/${name}"
+
+    if [[ -L "$target" ]]; then
+        local current_dest
+        current_dest="$(readlink "$target")"
+        if [[ "$current_dest" == "$source" ]]; then
+            echo "  Skill already linked: ${name}"
+        else
+            # Stale symlink from a different path (e.g., after npm update) — update it
+            rm "$target"
+            ln -s "$source" "$target"
+            echo "  Updated symlink: ${name} -> ${source}"
+        fi
+    elif [[ -d "$target" ]]; then
+        echo "  Warning: ${target} is a real directory (not a symlink), skipping to preserve custom skill." >&2
+    else
+        ln -s "$source" "$target"
+        echo "  Linked: ${name} -> ${source}"
+    fi
+}
 
 # --- Helper: patch opencode.json instructions ---
 patch_instructions() {
@@ -112,6 +141,19 @@ for lang in "$@"; do
     echo "  Patched ${OPENCODE_CONFIG}: added ${lang} rules to instructions"
 done
 
+# --- Install skills (language-agnostic, always run) ---
+echo ""
+echo "Installing skills -> ${DEST_SKILLS_DIR}/"
+mkdir -p "$DEST_SKILLS_DIR"
+skill_count=0
+for skill_dir in "$SKILLS_DIR"/*/; do
+    [[ -f "${skill_dir}SKILL.md" ]] || continue
+    link_skill "$(cd "$skill_dir" && pwd)"
+    (( skill_count++ )) || true
+done
+echo "  ${skill_count} skill(s) processed."
+
 echo ""
 echo "Done. Rules installed to ${DEST_RULES_DIR}/"
+echo "      Skills linked to ${DEST_SKILLS_DIR}/"
 echo "      Instructions registered in ${OPENCODE_CONFIG}"

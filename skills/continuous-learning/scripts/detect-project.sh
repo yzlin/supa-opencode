@@ -14,7 +14,7 @@
 #   PROJECT_ID, PROJECT_NAME, PROJECT_ROOT, PROJECT_DIR
 #
 # Detection priority:
-#   1. CLAUDE_PROJECT_DIR env var (if set)
+#   1. OPENCODE_PROJECT_DIR env var (if set); CLAUDE_PROJECT_DIR accepted as deprecated fallback
 #   2. git remote URL (hashed for uniqueness across machines)
 #   3. git repo root path (fallback, machine-specific)
 #   4. "global" (no project context detected)
@@ -29,8 +29,11 @@ _clv1_detect_project() {
   local project_id=""
   local source_hint=""
 
-  # 1. Try CLAUDE_PROJECT_DIR env var
-  if [ -n "$CLAUDE_PROJECT_DIR" ] && [ -d "$CLAUDE_PROJECT_DIR" ]; then
+  # 1. Try OPENCODE_PROJECT_DIR env var (CLAUDE_PROJECT_DIR accepted as deprecated fallback)
+  if [ -n "$OPENCODE_PROJECT_DIR" ] && [ -d "$OPENCODE_PROJECT_DIR" ]; then
+    project_root="$OPENCODE_PROJECT_DIR"
+    source_hint="env"
+  elif [ -n "$CLAUDE_PROJECT_DIR" ] && [ -d "$CLAUDE_PROJECT_DIR" ]; then
     project_root="$CLAUDE_PROJECT_DIR"
     source_hint="env"
   fi
