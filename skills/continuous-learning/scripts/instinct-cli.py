@@ -125,8 +125,8 @@ def detect_project() -> dict:
     """Detect current project context. Returns dict with id, name, root, project_dir."""
     project_root = None
 
-    # 1. OPENCODE_PROJECT_DIR env var (CLAUDE_PROJECT_DIR accepted as deprecated fallback)
-    env_dir = os.environ.get("OPENCODE_PROJECT_DIR") or os.environ.get("CLAUDE_PROJECT_DIR")
+    # 1. OPENCODE_PROJECT_DIR env var
+    env_dir = os.environ.get("OPENCODE_PROJECT_DIR")
     if env_dir and os.path.isdir(env_dir):
         project_root = env_dir
 

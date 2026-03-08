@@ -343,7 +343,6 @@ def test_validate_relative_path(tmp_path, monkeypatch):
 def test_detect_project_global_fallback(patch_globals, monkeypatch):
     """When no git and no env var, should return global project."""
     monkeypatch.delenv("OPENCODE_PROJECT_DIR", raising=False)
-    monkeypatch.delenv("CLAUDE_PROJECT_DIR", raising=False)
 
     # Mock subprocess.run to simulate git not available
     def mock_run(*args, **kwargs):
@@ -384,7 +383,6 @@ def test_detect_project_from_env(patch_globals, monkeypatch, tmp_path):
 def test_detect_project_git_timeout(patch_globals, monkeypatch):
     """Git timeout should fall through to global."""
     monkeypatch.delenv("OPENCODE_PROJECT_DIR", raising=False)
-    monkeypatch.delenv("CLAUDE_PROJECT_DIR", raising=False)
     import subprocess as sp
 
     def mock_run(cmd, **kwargs):

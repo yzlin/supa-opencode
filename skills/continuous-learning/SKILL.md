@@ -105,7 +105,7 @@ Session Activity (in a git repo)
 
 The system automatically detects your current project:
 
-1. **`OPENCODE_PROJECT_DIR` env var** (highest priority; `CLAUDE_PROJECT_DIR` accepted as deprecated fallback)
+1. **`OPENCODE_PROJECT_DIR` env var** (highest priority)
 2. **`git remote get-url origin`** -- hashed to create a portable project ID (same repo on different machines gets the same ID)
 3. **`git rev-parse --show-toplevel`** -- fallback using repo path (machine-specific)
 4. **Global fallback** -- if no project is detected, instincts go to global scope
