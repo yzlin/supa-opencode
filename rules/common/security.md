@@ -18,6 +18,7 @@ Before ANY commit:
 - ALWAYS use environment variables or a secret manager
 - Validate that required secrets are present at startup
 - Rotate any secrets that may have been exposed
+- NEVER edit `.env`, `.env.local`, `.env.*` files — inform the user and let them make the change
 
 ## Security Response Protocol
 

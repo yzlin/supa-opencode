@@ -7,7 +7,15 @@
 <optional body>
 ```
 
-Types: feat, fix, refactor, docs, test, chore, perf, ci
+Types: feat, fix, refactor, build, ci, chore, docs, style, perf, test
+
+### Pre-commit Checklist
+
+1. `git status` — verify what's staged
+2. Add explicit file paths — never `git add .` or `git add -A` blindly
+3. `git diff --staged` — review changes before committing
+4. Keep commits atomic (one logical change per commit)
+5. Quote paths with special characters (`[]`, `()`, spaces) in git commands
 
 Note: Configure attribution settings in `opencode.json` if needed.
 
