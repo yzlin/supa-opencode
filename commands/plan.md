@@ -10,10 +10,32 @@ Create a detailed implementation plan for: $ARGUMENTS
 
 ## Your Task
 
-1. **Restate Requirements** - Clarify what needs to be built
-2. **Identify Risks** - Surface potential issues, blockers, and dependencies
-3. **Create Step Plan** - Break down implementation into phases
-4. **Wait for Confirmation** - MUST receive user approval before proceeding
+### **Restate Requirements**
+
+**Goals:**: Clarify what needs to be built
+
+1. use `Question` tool to clarify ambiguities in the user request up front
+2. Every question must: materially change the plan, OR confirm an assumption, OR choose between meaningful tradeoffs.
+3. Offer only meaningful choices; don't include filler options that are obviously wrong.
+
+### **Identify Risks**
+
+**Goals:** Surface potential issues, blockers, and dependencies
+
+### **Create Step Plan**
+
+**Goals:** Break down implementation into phases
+
+### **Wait for Confirmation**
+
+**Goals:** MUST receive user approval before proceeding
+
+1. use `Question` tool to ask for confirmation [yes/no/modify] on the plan before any code is written
+
+## Question Rules
+- Use the `Question` tool when presenting structured multiple-choice options.
+- Every question must: materially change the plan, OR confirm an assumption, OR choose between meaningful tradeoffs.
+- Offer only meaningful choices; don't include filler options that are obviously wrong.
 
 ## Output Format
 
