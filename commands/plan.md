@@ -17,6 +17,7 @@ Create a detailed implementation plan for: $ARGUMENTS
 1. use `Question` tool to clarify ambiguities in the user request up front
 2. Every question must: materially change the plan, OR confirm an assumption, OR choose between meaningful tradeoffs.
 3. Offer only meaningful choices; don't include filler options that are obviously wrong.
+4. Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one.
 
 ### **Identify Risks**
 
@@ -31,11 +32,6 @@ Create a detailed implementation plan for: $ARGUMENTS
 **Goals:** MUST receive user approval before proceeding
 
 1. use `Question` tool to ask for confirmation [yes/no/modify] on the plan before any code is written
-
-## Question Rules
-- Use the `Question` tool when presenting structured multiple-choice options.
-- Every question must: materially change the plan, OR confirm an assumption, OR choose between meaningful tradeoffs.
-- Offer only meaningful choices; don't include filler options that are obviously wrong.
 
 ## Output Format
 
